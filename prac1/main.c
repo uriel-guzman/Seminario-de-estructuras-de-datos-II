@@ -18,7 +18,6 @@ int main() {
   Node* deletedSubjects = NULL;
 
   do {
-    printf("Choose an option:\n");
     printf("1) Add subject\n");
     printf("2) Modify subject\n");
     printf("3) Show all subjects\n");
@@ -28,6 +27,9 @@ int main() {
     printf("7) Recover subject\n");
     printf("8) Permanently delete subject\n");
     printf("0) Exit\n");
+    printf("Choose an option: ");
+    scanf("%c", &op);
+    getchar();
 
     switch (op) {
       case '1':
@@ -187,8 +189,14 @@ void menuModifySubject(Node* subjects) {
 }
 
 void menuShowAllSubjects(Node* subjects) {
+  printf("menushowallsubjects\n");
   Node* it;
 
+  if (subjects) {
+    printf("head not null\n");
+  } else {
+    printf("head is null\n");
+  }
   for (it = subjects; it; it = it->next)
     menuShowSubject(it->subj);
 }
@@ -202,23 +210,20 @@ void menuShowAllSubjectsOrdered(Node* subjects) {
   for (it = subjects; it; it = it->next)
     listAdd(copy, it->subj);
 
-  int i;
-  int j;
-
-  for (it = subjects, i = 0; it; it = it->next, ++i) {
+  for (it = subjects; it; it = it->next) {
     Node* mn = it;
-    int k = i;
-    for (it2 = subjects, j = 0; j < i; it2 = it2->next, ++j) {
-      if (strcmp(mn->subj.name, it2->subj.name) < 0) {
+    for (it2 = subjects; it2->next != it; it2 = it2->next) {
+      if (strcmp(mn->subj.name, it2->subj.name) < 0) 
         mn = it2;
-        k = j;
-      }
     }
 
-    char temp[10];
-    strcpy(temp, it->subj.name);
-    strpcy(it->subj.name, mn->subj.name);
-    mn->subj.name = temp;
+    char b[30] = {0};
+    char t[30] = {0};
+
+    strcpy(b, mn->subj.name);
+    strcpy(t, it->subj.name);
+    strcpy(it->subj.name, b);
+    strcpy(mn->subj.name, t);
   }
 
   menuShowAllSubjects(copy);

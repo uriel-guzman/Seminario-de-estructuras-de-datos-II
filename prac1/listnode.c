@@ -12,6 +12,9 @@ void listAdd(Node* head, Subj subj) {
     temp->next = head;
     head = temp;
   }
+  if (head) {
+    printf("head not null\n");
+  }
 }
 
 void listDelete(Node* head, char NRC[]) {

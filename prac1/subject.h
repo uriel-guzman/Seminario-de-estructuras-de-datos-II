@@ -1,3 +1,6 @@
+#ifndef SUBJECT_H
+#define SUBJECT_H
+
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -13,6 +16,5 @@ typedef struct Subject {
 } Subj;
 
 void readSubject(Subj *s); 
-int cmp (const void*, const void*);
 
-
+#endif /* SUBJECT_h */

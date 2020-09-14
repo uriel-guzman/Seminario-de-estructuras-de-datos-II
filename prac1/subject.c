@@ -30,6 +30,7 @@ void readSubject(Subj *subj) {
     printf("%s? ", days[i]);
     char op;
     scanf("%c", &op);
+    getchar();
     subj->availableDays[i] = op == 'y';
   }
   
@@ -41,8 +42,4 @@ void readSubject(Subj *subj) {
   
   printf("Section: ");
   scanf("%s", subj->section);
-}
-
-int comp(char* a, char* b) {
-   return (strcmp(a, b));
 }
