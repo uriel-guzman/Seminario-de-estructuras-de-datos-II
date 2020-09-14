@@ -13,5 +13,6 @@ typedef struct Subject {
 } Subj;
 
 void readSubject(Subj *s); 
+int cmp (const void*, const void*);
 
 

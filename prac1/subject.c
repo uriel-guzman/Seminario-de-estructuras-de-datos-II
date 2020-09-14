@@ -1,17 +1,18 @@
 #include "subject.h"
+#include "string.h"
 
-void readSubject(Subj *s) {
+void readSubject(Subj *subj) {
   printf("Name: ");
-  scanf("%[^\n]s", s->name);  
+  scanf("%[^\n]s", subj->name);  
   
   printf("ID: ");
-  scanf("%s", s->ID);  
+  scanf("%s", subj->ID);  
   
   printf("NRC: ");
-  scanf("%s", s->NRC);  
+  scanf("%s", subj->NRC);  
 
   printf("Professor name: ");
-  scanf("%[^\n]s", s->professorName);  
+  scanf("%[^\n]s", subj->professorName);  
 
   char days[7][10] = {
     "Monday",
@@ -29,15 +30,19 @@ void readSubject(Subj *s) {
     printf("%s? ", days[i]);
     char op;
     scanf("%c", &op);
-    s->availableDays[i] = op == 'y';
+    subj->availableDays[i] = op == 'y';
   }
   
-  printf("Start time [hh:mm]: ");
-  scanf("%s", s->startTime);
+  printf("Start time [hhmm]: ");
+  scanf("%s", subj->startTime);
   
-  printf("End time [hh:mm]: ");
-  scanf("%s", s->endTime);
+  printf("End time [hhmm]: ");
+  scanf("%s", subj->endTime);
   
   printf("Section: ");
-  scanf("%s", s->section);
+  scanf("%s", subj->section);
+}
+
+int comp(char* a, char* b) {
+   return (strcmp(a, b));
 }
