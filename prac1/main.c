@@ -2,15 +2,15 @@
 #include "listnode.h"
 #include <string.h>
 
-void menuShowSubject(Subj);
-void menuAddSubject(Node*);
-void menuModifySubject(Node*);
-void menuShowAllSubjects(Node*);
-void menuShowAllSubjectsOrdered(Node*);
-void menuFindSubject(Node*);
-void menuTempDelSubject(Node*, Node*);
-void menuRecoverSubject(Node*, Node*);
-void menuPermDelSubject(Node*);
+void showSubject(Subj);
+bool addSubject(Node**);
+bool modifySubject(Node**);
+bool showAllSubjects(Node*);
+bool showAllSubjectsOrdered(Node*);
+bool findSubject(Node*);
+bool tempDelSubject(Node**, Node**);
+bool recoverSubject(Node**, Node**);
+bool permDelSubject(Node**);
 
 int main() {
   char op;
@@ -28,47 +28,47 @@ int main() {
     printf("8) Permanently delete subject\n");
     printf("0) Exit\n");
     printf("Choose an option: ");
-    scanf("%c", &op);
+    scanf(" %c", &op);
     getchar();
 
     switch (op) {
       case '1':
-        menuAddSubject(subjects);
+        addSubject(&subjects);
         break;
       case '2':
-        menuModifySubject(subjects);
+        modifySubject(&subjects);
         break;
       case '3':
-        menuShowAllSubjects(subjects);
+        showAllSubjects(subjects);
         break;
       case '4':
-        menuShowAllSubjectsOrdered(subjects);
+        showAllSubjectsOrdered(subjects);
         break;
       case '5':
-        menuFindSubject(subjects);
+        findSubject(subjects);
         break;
       case '6':
-        menuTempDelSubject(subjects, deletedSubjects);
+        tempDelSubject(&subjects, &deletedSubjects);
         break;
       case '7':
-        menuRecoverSubject(subjects, deletedSubjects);
+        recoverSubject(&subjects, &deletedSubjects);
         break;
       case '8':
-        menuPermDelSubject(subjects);
+        permDelSubject(&subjects);
         break;
     }
   } while (op != '0');
 }
 
-void menuShowSubject(Subj subj) {
+void showSubject(Subj subj) {
   printf("\n");  
-  printf("Name: %s\n", subj.name);
-  printf("ID: %s\n", subj.ID);
-  printf("NRC: %s\n", subj.NRC);
-  printf("Professor name: %s\n", subj.professorName);
-  printf("Available days: ");
+  printf("\tName: %s\n", subj.name);
+  printf("\tID: %s\n", subj.ID);
+  printf("\tNRC: %s\n", subj.NRC);
+  printf("\tProfessor name: %s\n", subj.professorName);
+  printf("\tAvailable days: \n");
 
-  char days[7][10] = {
+  char days[7][50] = {
     "Monday",
     "Tuesday",
     "Wednesday",
@@ -78,32 +78,31 @@ void menuShowSubject(Subj subj) {
     "Sunday"
   };
 
-  int i;
-
-  for (i = 0; i < 7; ++i) 
+  for (int i = 0; i < 7; ++i) 
     if (subj.availableDays[i]) 
-      printf("\t%s\n", days[i]);
+      printf("\t\t%s\n", days[i]);
 
-  printf("Start time: %s", subj.startTime);
-  printf("End time: %s", subj.endTime);
-  printf("Section: %s", subj.section);
+  printf("\tStart time: %s\n", subj.startTime);
+  printf("\tEnd time: %s\n", subj.endTime);
+  printf("\tSection: %s\n", subj.section);
   printf("\n");  
 }
 
-void menuAddSubject(Node* subjects) {
-  Subj* subj;
-  readSubject(subj);
-  listAdd(subjects, *subj);
+bool addSubject(Node** subjects) {
+  Subj subj;
+  readSubject(&subj);
+  printf("%s\n", subj.name);
+  return listAdd(subjects, subj);
 }
 
-void menuModifySubject(Node* subjects) {
+bool modifySubject(Node** subjects) {
   Node* it;
-  char NRC[10];
+  char NRC[50];
   
   printf("NRC: ");
   scanf("%s", NRC);
 
-  for (it = subjects; it; it = it->next)
+  for (it = *subjects; it; it = it->next)
     if (strcmp(it->subj.NRC, NRC) == 0) {
       char op;
       do {
@@ -115,33 +114,36 @@ void menuModifySubject(Node* subjects) {
         printf("6) End time\n");
         printf("7) Section\n");
         printf("0) Exit\n");
-        printf("Attribute to modify: \n");
-        scanf("%c", &op);
+        printf("Attribute to modify: ");
+        scanf(" %c", &op);
+        getchar();
         
         switch (op) {
           case '1': {
-            char name[30];
+            char name[50];
             printf("New name: ");
-            scanf("%[^\n]s", name);
+            fgets(name, 100, stdin);
+            name[strlen(name) - 1] = '\0';
             strcpy(it->subj.name, name);
             break;
             }
           case '2': {
-            char ID[10];
+            char ID[50];
             printf("New ID: ");
             scanf("%s", ID);
             strcpy(it->subj.ID, ID);
             break;
           }
           case '3': {
-            char professorName[30];
+            char professorName[50];
             printf("New professor name: ");
-            scanf("%[^\n]s", professorName);
+            fgets(professorName, 100, stdin);
+            professorName[strlen(professorName) - 1] = '\0';
             strcpy(it->subj.professorName, professorName);
             break;
           }
           case '4': {
-            char days[7][10] = {
+            char days[7][50] = {
               "Monday",
               "Tuesday",
               "Wednesday",
@@ -156,134 +158,120 @@ void menuModifySubject(Node* subjects) {
             for (int i = 0; i < 7; ++i) {
               printf("%s? ", days[i]);
               char op;
-              scanf("%c", &op);
+              scanf(" %c", &op);
+              getchar();
               it->subj.availableDays[i] = op == 'y';
             }
             break;
           }
           case '5': {
-            char startTime[10];
+            char startTime[50];
             printf("New start time [hhmm]: ");
             scanf("%s", startTime);
             strcpy(it->subj.startTime, startTime);
             break;
           }
           case '6': {
-            char endTime[10];
+            char endTime[50];
             printf("New end time [hhmm]: ");
             scanf("%s", endTime);
             strcpy(it->subj.endTime, endTime);
             break;
           }
           case '7': {
-            char section[10];
-            printf("New section");
+            char section[50];
+            printf("New section: ");
             scanf("%s", section);
             strcpy(it->subj.section, section);
             break;
           }
         }
       } while (op != '0');
-      break;
+      return true;
     }
+  return false;
 }
 
-void menuShowAllSubjects(Node* subjects) {
-  printf("menushowallsubjects\n");
-  Node* it;
+bool showAllSubjects(Node* subjects) {
+  for (Node* it = subjects; it; it = it->next)
+    showSubject(it->subj);
 
-  if (subjects) {
-    printf("head not null\n");
-  } else {
-    printf("head is null\n");
-  }
-  for (it = subjects; it; it = it->next)
-    menuShowSubject(it->subj);
+  return subjects;
 }
 
-void menuShowAllSubjectsOrdered(Node* subjects) {
+bool showAllSubjectsOrdered(Node* subjects) {
   Node* copy = NULL;
 
-  Node* it;
-  Node* it2;
+  for (Node* it = subjects; it; it = it->next)
+    listAdd(&copy, it->subj);
 
-  for (it = subjects; it; it = it->next)
-    listAdd(copy, it->subj);
-
-  for (it = subjects; it; it = it->next) {
+  for (Node* it = copy; it; it = it->next) {
     Node* mn = it;
-    for (it2 = subjects; it2->next != it; it2 = it2->next) {
-      if (strcmp(mn->subj.name, it2->subj.name) < 0) 
+    for (Node* it2 = it->next; it2; it2 = it2->next) 
+      if (strcmp(it2->subj.name, mn->subj.name) < 0) 
         mn = it2;
-    }
 
-    char b[30] = {0};
-    char t[30] = {0};
-
-    strcpy(b, mn->subj.name);
-    strcpy(t, it->subj.name);
-    strcpy(it->subj.name, b);
-    strcpy(mn->subj.name, t);
+    Subj temp = it->subj;
+    it->subj = mn->subj;
+    mn->subj = temp;
   }
 
-  menuShowAllSubjects(copy);
+  showAllSubjects(copy);
+
+  return copy;
 }
 
-void menuFindSubject(Node* subjects) {
+bool findSubject(Node* subjects) {
   Node* it;
-  char NRC[10];
+  char NRC[50];
   
   printf("NRC: ");
   scanf("%s", NRC);
 
   for (it = subjects; it; it = it->next)
     if (strcmp(it->subj.NRC, NRC) == 0) {
-      menuShowSubject(it->subj);
-      break;
+      showSubject(it->subj);
+      return true;
     }
+  return false;
 }
 
-void menuTempDelSubject(Node* subjects, Node* deletedSubjects) {
-  Node* it;
-  char NRC[10];
+bool tempDelSubject(Node** subjects, Node** deletedSubjects) {
+  char NRC[50];
 
   printf("NRC: ");
   scanf("%s", NRC);
 
-  for (it = subjects; it; it = it->next)
-    if (strcmp(it->subj.NRC, NRC) == 0) {
-      listAdd(deletedSubjects, it->subj);
-      listDelete(deletedSubjects, NRC);
-      break;  
-    }
+  for (Node* it = *subjects; it; it = it->next)
+    if (strcmp(it->subj.NRC, NRC) == 0) 
+      return listAdd(deletedSubjects, it->subj) && listDelete(subjects, NRC);
+
+  return false;
 }
 
-void menuRecoverSubject(Node* subjects, Node* deletedSubjects) {
-  Node* it;
-  char NRC[10];
+bool recoverSubject(Node** subjects, Node** deletedSubjects) {
+  char NRC[50];
 
   printf("NRC: ");
   scanf("%s", NRC);
 
-  for (it = deletedSubjects; it; it = it->next)
-    if (strcmp(it->subj.NRC, NRC) == 0) {
-      listAdd(subjects, it->subj);
-      listDelete(deletedSubjects, NRC);
-      break;  
-    }
+  for (Node* it = *deletedSubjects; it; it = it->next)
+    if (strcmp(it->subj.NRC, NRC) == 0) 
+      return listAdd(subjects, it->subj) && listDelete(deletedSubjects, NRC);
+
+  return false;
 }
 
-void menuPermDelSubject(Node* subjects) {
-  Node* it;
-  char NRC[10];
+bool permDelSubject(Node** subjects) {
+  char NRC[50];
 
   printf("NRC: ");
   scanf("%s", NRC);
 
-  for (it = subjects; it; it = it->next)
-    if (strcmp(it->subj.NRC, NRC) == 0) {
-      listDelete(subjects, NRC);
-      break;  
-    }
+  for (Node* it = *subjects; it; it = it->next)
+    if (strcmp(it->subj.NRC, NRC) == 0) 
+      return listDelete(subjects, NRC);
+
+  return false;
 }
 

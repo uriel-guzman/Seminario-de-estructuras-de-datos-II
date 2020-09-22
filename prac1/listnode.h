@@ -9,7 +9,7 @@ typedef struct ListNode {
   struct ListNode* next;
 } Node;
 
-void listAdd(Node*, Subj);
-void listDelete(Node*, char NRC[]);
+bool listAdd(Node**, Subj);
+bool listDelete(Node**, char NRC[]);
 
 #endif /* LISTNODE_H */

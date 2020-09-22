@@ -5,14 +5,14 @@
 #include <stdio.h>
 
 typedef struct Subject {
-  char name[30];
-  char ID[10];
-  char NRC[10];
-  char professorName[30];
-  bool availableDays[7];
-  char startTime[10];
-  char endTime[10];
-  char section[10];
+  char name[50];
+  char ID[50];
+  char NRC[50];
+  char professorName[50];
+  bool availableDays[50];
+  char startTime[50];
+  char endTime[50];
+  char section[50];
 } Subj;
 
 void readSubject(Subj *s); 

@@ -2,31 +2,34 @@
 #include <stdlib.h>
 #include <string.h>
 
-void listAdd(Node* head, Subj subj) {
-  if (!head) {
-    head = malloc(sizeof(Node*));
-    head->subj = subj;
+bool listAdd(Node** head, Subj subj) {
+  if (!*head) {
+    *head = (Node*)malloc(sizeof(Node));
+    (*head)->subj = subj;
   } else {
-    Node* temp = malloc(sizeof(Node*));
+    Node* temp = (Node*)malloc(sizeof(Node));
     temp->subj = subj;
-    temp->next = head;
-    head = temp;
+    temp->next = *head;
+    *head = temp;
   }
-  if (head) {
-    printf("head not null\n");
-  }
+  return *head;
 }
 
-void listDelete(Node* head, char NRC[]) {
-  Node* it = head;
-
-  if (!it->next) 
-    head = NULL;
-  
-  for (; it && it->next; it = it->next) {
-    if (strcmp(it->next->subj.NRC, NRC) == 0) {
-      it->next = it->next->next; 
-      break;
-    }
+bool listDelete(Node** head, char NRC[]) {
+  if (strcmp((*head)->subj.NRC, NRC) == 0) {
+    Node* temp = *head;
+    *head = (*head)->next;
+    free(temp);
+    return true;
   }
+  
+  for (Node* it = *head; it && it->next; it = it->next) 
+    if (strcmp(it->next->subj.NRC, NRC) == 0) {
+      Node* temp = it->next;
+      it->next = it->next->next; 
+      free(temp);
+      return true;
+    }
+
+  return false;
 }
