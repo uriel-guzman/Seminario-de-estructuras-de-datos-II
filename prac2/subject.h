@@ -17,14 +17,14 @@ class Subj {
   public:
     void readSubject();
 
-    void setName(const string &name);
-    void setID(const string &ID);
-    void setNRC(const string &NRC);
-    void setProfessorName(const string &professorName);
-    void setAvailableDays(int availableDays);
-    void setStartTime(const string &startTime);
-    void setEndTime(const string &endTime);
-    void setSection(const string &section);
+    void setName(const string &);
+    void setID(const string &);
+    void setNRC(const string &);
+    void setProfessorName(const string &);
+    void setAvailableDays(int);
+    void setStartTime(const string &);
+    void setEndTime(const string &);
+    void setSection(const string &);
 
     string getName();
     string getID();

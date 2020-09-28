@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "algorithm"
 
 void Menu::showSubject(Subj subj) {
   cout << '\n';
@@ -60,26 +61,25 @@ void Menu::modifySubject(vector<Subj>& subjects) {
             string name;
             cout << "New name: ";
             cin >> name;
-            strcpy(it->subj.name, name);
+            subj.setName(name);
             break;
             }
           case '2': {
-            char ID[50];
-            printf("New ID: ");
-            scanf("%s", ID);
-            strcpy(it->subj.ID, ID);
+            string ID;
+            cout << "New ID: ";
+            cin >> ID;
+            subj.setID(ID);
             break;
           }
           case '3': {
-            char professorName[50];
-            printf("New professor name: ");
-            fgets(professorName, 100, stdin);
-            professorName[strlen(professorName) - 1] = '\0';
-            strcpy(it->subj.professorName, professorName);
+            string professorName;
+            cout << "New professor name: ";
+            cin >> professorName;
+            subj.setProfessorName(professorName);
             break;
           }
           case '4': {
-            char days[7][50] = {
+            string days[7] = {
               "Monday",
               "Tuesday",
               "Wednesday",
@@ -89,67 +89,106 @@ void Menu::modifySubject(vector<Subj>& subjects) {
               "Sunday"
             };
 
-            printf("Select available days [y/n]\n");
+            cout << "Select available days [y/n]\n";
             
             for (int i = 0; i < 7; ++i) {
-              printf("%s? ", days[i]);
+              cout << days[i] << "? ";
               char op;
-              scanf(" %c", &op);
-              getchar();
-              it->subj.availableDays[i] = op == 'y';
+              cin >> op;
+              if (op == 'y')
+                subj.setAvailableDays(i);
             }
             break;
           }
           case '5': {
-            char startTime[50];
-            printf("New start time [hhmm]: ");
-            scanf("%s", startTime);
-            strcpy(it->subj.startTime, startTime);
+            string startTime;
+            cout << "New start time [hhmm]: ";
+            cin >> startTime;
+            subj.setStartTime(startTime);
             break;
           }
           case '6': {
-            char endTime[50];
-            printf("New end time [hhmm]: ");
-            scanf("%s", endTime);
-            strcpy(it->subj.endTime, endTime);
+            string endTime;
+            cout << "New end time [hhmm]: ";
+            cin >> endTime;
+            subj.setEndTime(endTime);
             break;
           }
           case '7': {
-            char section[50];
-            printf("New section: ");
-            scanf("%s", section);
-            strcpy(it->subj.section, section);
+            string section;
+            cout << "New section: ";
+            cin >> section;
+            subj.setSection(section);
             break;
           }
         }
       } while (op != '0');
-      return true;
     }
-  return false;
-
 }
 
-bool Menu::showAllSubjects(const vector<Subj>&) {
-
+void Menu::showAllSubjects(const vector<Subj>& subjects) {
+  for (Subj subj : subjects)
+    showSubject(subj);
 }
 
-bool Menu::showAllSubjectsOrdered(const vector<Subj>&) {
+void Menu::showAllSubjectsOrdered(const vector<Subj>& subjects) {
+  vector<Subj> copy = subjects;
 
+  sort(copy.begin(), copy.end(), [&](Subj &a, Subj &b) {
+    return a.getName() < b.getName();      
+  });
+
+  showAllSubjects(copy);
 }
 
-bool Menu::findSubject(const vector<Subj>&) {
+void Menu::findSubject(const vector<Subj>& subjects) {
+  string NRC;
 
+  cout << "NRC: ";
+  cin >> NRC;
+
+  for (Subj subj : subjects) 
+    if (subj.getNRC() == NRC) {
+      showSubject(subj);
+      break;
+    }
 }
 
-bool Menu::tempDelSubject(vector<Subj>&, vector<Subj>&) {
+void Menu::tempDelSubject(vector<Subj>& subjects, vector<Subj>& deletedSubjects) {
+  string NRC;
+  cout << "NRC: ";
+  cin >> NRC;
 
+  for (int i = 0; i < subjects.size(); ++i)
+    if (subjects[i].getNRC() == NRC) {
+      deletedSubjects.push_back(subjects[i]);
+      subjects.erase(subjects.begin() + i);
+      break;
+    }
 }
 
-bool Menu::recoverSubject(vector<Subj>&, vector<Subj>&) {
+void Menu::recoverSubject(vector<Subj>& subjects, vector<Subj>& deletedSubjects) {
+  string NRC;
+  cout << "NRC: ";
+  cin >> NRC;
 
+  for (int i = 0; i < deletedSubjects.size(); ++i)
+    if (deletedSubjects[i].getNRC() == NRC) {
+      subjects.push_back(deletedSubjects[i]);
+      deletedSubjects.erase(deletedSubjects.begin() + i);
+      break;
+    }
 }
 
-bool Menu::permDelSubject(vector<Subj>&) {
+void Menu::permDelSubject(vector<Subj>& subjects) {
+  string NRC;
+  cout << "NRC: ";
+  cin >> NRC;
 
+  for (int i = 0; i < subjects.size(); ++i)
+    if (subjects[i].getNRC() == NRC) {
+      subjects.erase(subjects.begin() + i);
+      break;
+    }
 }
 

@@ -61,8 +61,8 @@ void Subj::setProfessorName(const string &professorName) {
   this->professorName = professorName;
 }
 
-void Subj::setAvailableDays(int availableDays) {
-  this->availableDays = availableDays;
+void Subj::setAvailableDays(int day) {
+  this->availableDays |= (1 << day);
 }
 
 void Subj::setStartTime(const string &startTime) {
