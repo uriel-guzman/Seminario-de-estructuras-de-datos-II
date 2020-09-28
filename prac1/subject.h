@@ -17,4 +17,4 @@ typedef struct Subject {
 
 void readSubject(Subj *s); 
 
-#endif /* SUBJECT_h */
+#endif /* SUBJECT_H */

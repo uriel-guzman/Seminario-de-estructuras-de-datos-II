@@ -1,21 +1,10 @@
-#include <stdio.h>
-#include "listnode.h"
-#include <string.h>
-
-void showSubject(Subj);
-bool addSubject(Node**);
-bool modifySubject(Node**);
-bool showAllSubjects(Node*);
-bool showAllSubjectsOrdered(Node*);
-bool findSubject(Node*);
-bool tempDelSubject(Node**, Node**);
-bool recoverSubject(Node**, Node**);
-bool permDelSubject(Node**);
+#include "menu.h"
 
 int main() {
   char op;
-  Node* subjects = NULL;
-  Node* deletedSubjects = NULL;
+  vector<Subj> subjects;
+  vector<Subj> deletedSubjects;
+  Menu menu;
 
   do {
     printf("1) Add subject\n");
@@ -33,59 +22,31 @@ int main() {
 
     switch (op) {
       case '1':
-        addSubject(&subjects);
+        menu.addSubject(subjects);
         break;
       case '2':
-        modifySubject(&subjects);
+        menu.modifySubject(subjects);
         break;
       case '3':
-        showAllSubjects(subjects);
+        menu.showAllSubjects(subjects);
         break;
       case '4':
-        showAllSubjectsOrdered(subjects);
+        menu.showAllSubjectsOrdered(subjects);
         break;
       case '5':
-        findSubject(subjects);
+        menu.findSubject(subjects);
         break;
       case '6':
-        tempDelSubject(&subjects, &deletedSubjects);
+        menu.tempDelSubject(subjects, deletedSubjects);
         break;
       case '7':
-        recoverSubject(&subjects, &deletedSubjects);
+        menu.recoverSubject(subjects, deletedSubjects);
         break;
       case '8':
-        permDelSubject(&subjects);
+        menu.permDelSubject(subjects);
         break;
     }
   } while (op != '0');
-}
-
-void showSubject(Subj subj) {
-  printf("\n");  
-  printf("\tName: %s\n", subj.name);
-  printf("\tID: %s\n", subj.ID);
-  printf("\tNRC: %s\n", subj.NRC);
-  printf("\tProfessor name: %s\n", subj.professorName);
-  printf("\tAvailable days: \n");
-
-  char days[7][50] = {
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday"
-  };
-
-  for (int i = 0; i < 7; ++i) 
-    if (subj.availableDays[i]) 
-      printf("\t\t%s\n", days[i]);
-
-  printf("\tStart time: %s\n", subj.startTime);
-  printf("\tEnd time: %s\n", subj.endTime);
-  printf("\tSection: %s\n", subj.section);
-  printf("\n");  
 }
 
 bool addSubject(Node** subjects) {
