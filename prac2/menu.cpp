@@ -3,29 +3,41 @@
 
 void Menu::showSubject(Subj subj) {
   cout << '\n';
-  cout << '\t' << subj.getName() << '\n';
-  cout << '\t' << subj.getID() << '\n';
-  cout << '\t' << subj.getNRC() << '\n';
-  cout << '\t' << subj.getProfessorName() << '\n';
-  cout << "\tAvailable days\n";
 
-  string days[7] = {
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday"
-  };
+  cout << '\t' << "Name: " << subj.getName() << '\n';
 
-  for (int i = 0; i < 7; ++i) 
-    if (subj.getAvailableDays() & (1 << i)) 
-      cout << "\t\t" << days[i] << '\n';
+  cout << '\t' << "ID: " << subj.getID() << '\n';
 
-  cout << '\t' << subj.getStartTime() << '\n';
-  cout << '\t' << subj.getEndTime() << '\n';
-  cout << '\t' << subj.getSection() << '\n';
+  cout << '\t' << "NRC: " << subj.getNRC() << '\n';
+
+  cout << '\t' << "Professor name: " << subj.getProfessorName() << '\n';
+
+  if (subj.getAvailableDays() == 0)
+    cout << "\t" << "No available days\n";
+  else {
+    cout << "\tAvailable days: \n";
+
+    string days[7] = {
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    };
+
+    for (int i = 0; i < 7; ++i) 
+      if (subj.getAvailableDays() & (1 << i)) 
+        cout << "\t\t" << days[i] << '\n';
+  }
+
+  cout << '\t' << "Start time: " << subj.getStartTime() << '\n';
+
+  cout << '\t' << "End time: " << subj.getEndTime() << '\n';
+
+  cout << '\t' << "Section: " << subj.getSection() << '\n';
+
   cout << '\n';
 }
 
@@ -40,9 +52,11 @@ void Menu::modifySubject(vector<Subj>& subjects) {
   
   cout << "NRC: ";
   cin >> NRC;
+  bool found = false;
 
   for (Subj &subj : subjects)
-    if (subj.getNRC() == NRC)) {
+    if (subj.getNRC() == NRC) {
+      found = true;
       char op;
       do {
         cout << "1) Name\n";
@@ -60,7 +74,8 @@ void Menu::modifySubject(vector<Subj>& subjects) {
           case '1': {
             string name;
             cout << "New name: ";
-            cin >> name;
+            cin.ignore();
+            getline(cin, name);
             subj.setName(name);
             break;
             }
@@ -74,7 +89,8 @@ void Menu::modifySubject(vector<Subj>& subjects) {
           case '3': {
             string professorName;
             cout << "New professor name: ";
-            cin >> professorName;
+            cin.ignore();
+            getline(cin, professorName);
             subj.setProfessorName(professorName);
             break;
           }
@@ -91,6 +107,8 @@ void Menu::modifySubject(vector<Subj>& subjects) {
 
             cout << "Select available days [y/n]\n";
             
+            subj.resetAvailableDays();
+
             for (int i = 0; i < 7; ++i) {
               cout << days[i] << "? ";
               char op;
@@ -123,25 +141,43 @@ void Menu::modifySubject(vector<Subj>& subjects) {
           }
         }
       } while (op != '0');
-    }
+    } 
+
+  if (!found)
+    cout << "No subject was found\n";
 }
 
 void Menu::showAllSubjects(const vector<Subj>& subjects) {
+  if (subjects.empty()) {
+    cout << "There are no subjects to show\n";
+    return;
+  }
+
   for (Subj subj : subjects)
     showSubject(subj);
 }
 
 void Menu::showAllSubjectsOrdered(const vector<Subj>& subjects) {
+  if (subjects.empty()) {
+    cout << "There are no subjects to show\n";
+    return;
+  }
+
   vector<Subj> copy = subjects;
 
   sort(copy.begin(), copy.end(), [&](Subj &a, Subj &b) {
-    return a.getName() < b.getName();      
+      return a.getName() < b.getName();      
   });
 
   showAllSubjects(copy);
 }
 
 void Menu::findSubject(const vector<Subj>& subjects) {
+  if (subjects.empty()) {
+    cout << "There are no subjects to find\n";
+    return;
+  }
+
   string NRC;
 
   cout << "NRC: ";
@@ -150,11 +186,18 @@ void Menu::findSubject(const vector<Subj>& subjects) {
   for (Subj subj : subjects) 
     if (subj.getNRC() == NRC) {
       showSubject(subj);
-      break;
+      return;
     }
+
+  cout << "No subject was found\n";
 }
 
 void Menu::tempDelSubject(vector<Subj>& subjects, vector<Subj>& deletedSubjects) {
+  if (subjects.empty()) {
+    cout << "There are no subjects to delete\n";
+    return;
+  }
+  
   string NRC;
   cout << "NRC: ";
   cin >> NRC;
@@ -163,11 +206,18 @@ void Menu::tempDelSubject(vector<Subj>& subjects, vector<Subj>& deletedSubjects)
     if (subjects[i].getNRC() == NRC) {
       deletedSubjects.push_back(subjects[i]);
       subjects.erase(subjects.begin() + i);
-      break;
+      return;
     }
+
+  cout << "No subject was found\n";
 }
 
 void Menu::recoverSubject(vector<Subj>& subjects, vector<Subj>& deletedSubjects) {
+  if (deletedSubjects.empty()) {
+    cout << "There are no subjects to recover\n";
+    return;
+  }
+    
   string NRC;
   cout << "NRC: ";
   cin >> NRC;
@@ -176,11 +226,18 @@ void Menu::recoverSubject(vector<Subj>& subjects, vector<Subj>& deletedSubjects)
     if (deletedSubjects[i].getNRC() == NRC) {
       subjects.push_back(deletedSubjects[i]);
       deletedSubjects.erase(deletedSubjects.begin() + i);
-      break;
+      return;
     }
+
+  cout << "No subject was found\n";
 }
 
 void Menu::permDelSubject(vector<Subj>& subjects) {
+  if (subjects.empty()) {
+    cout << "There are no subjects to delete\n";
+    return;
+  }
+
   string NRC;
   cout << "NRC: ";
   cin >> NRC;
@@ -188,7 +245,9 @@ void Menu::permDelSubject(vector<Subj>& subjects) {
   for (int i = 0; i < subjects.size(); ++i)
     if (subjects[i].getNRC() == NRC) {
       subjects.erase(subjects.begin() + i);
-      break;
+      return;
     }
+
+  cout << "No subject was found\n";
 }
 

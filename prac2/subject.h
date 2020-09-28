@@ -5,16 +5,18 @@
 using namespace std;
 
 class Subj {
-  private:
-    string name;
-    string ID;
-    string NRC;
-    string professorName;
-    int availableDays;
-    string startTime;
-    string endTime;
-    string section;
+  string name;
+  string ID;
+  string NRC;
+  string professorName;
+  int availableDays;
+  string startTime;
+  string endTime;
+  string section;
+
   public:
+    Subj();
+
     void readSubject();
 
     void setName(const string &);
@@ -22,6 +24,7 @@ class Subj {
     void setNRC(const string &);
     void setProfessorName(const string &);
     void setAvailableDays(int);
+    void resetAvailableDays();
     void setStartTime(const string &);
     void setEndTime(const string &);
     void setSection(const string &);

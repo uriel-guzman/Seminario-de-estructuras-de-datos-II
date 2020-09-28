@@ -2,18 +2,24 @@
 #include <string.h>
 #include <stdlib.h>
 
+Subj::Subj() {
+  availableDays = 0;
+}
+
 void Subj::readSubject() {
   printf("Name: ");
-  cin >> name;
-
-  printf("Professor name: ");
-  cin >> professorName;
+  cin.ignore();
+  getline(cin, name);
 
   printf("ID: ");
   cin >> ID;
   
   printf("NRC: ");
   cin >> NRC;
+
+  printf("Professor name: ");
+  cin.ignore();
+  getline(cin, professorName);
 
   string days[7] = {
     "Monday",
@@ -65,6 +71,10 @@ void Subj::setAvailableDays(int day) {
   this->availableDays |= (1 << day);
 }
 
+void Subj::resetAvailableDays() {
+  this->availableDays = 0; 
+}
+
 void Subj::setStartTime(const string &startTime) {
   this->startTime = startTime;
 }
@@ -76,7 +86,6 @@ void Subj::setEndTime(const string &endTime) {
 void Subj::setSection(const string &section) {
   this->section = section;
 }
-
 
 string Subj::getName() {
   return name;
